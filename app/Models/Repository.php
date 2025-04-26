@@ -25,6 +25,8 @@ class Repository extends Model
         'tags' => 'array',
     ];
 
+    protected $appends = [];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -32,13 +34,17 @@ class Repository extends Model
 
     public function links()
     {
-        return $this->hasMany(Link::class);
+        return $this->hasMany(Enlace::class);
     }
 
     public function getTagModelsAttribute()
     {
         $tagIds = $this->tags ?? [];
 
-        return Tag::whereIn('_id', $tagIds)->get(); // Mongo query con los ObjectId
+        if (empty($tagIds)) {
+            return collect(); // Devuelve colección vacía si no hay tags
+        }
+
+        return Tag::whereIn('_id', $tagIds)->get();
     }
 }
