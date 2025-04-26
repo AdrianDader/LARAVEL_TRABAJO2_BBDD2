@@ -11,132 +11,112 @@ class RepositoryController extends Controller
 {
 
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(Request $request)
+{
+    $repositories = Repository::where('user_id', $request->user()->id)->get();
+
+    return response()->json($repositories);
+}
+
+
+    public function show(string $id, Request $request)
     {
-        return Repository::all();
-    }
+        $repository = Repository::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->first();
 
-  
-
-
-     
-   
-
-
-    public function show(string $id)
-    {
-        // Buscamos el repositorio por ID
-        $repository = Repository::find($id);
-
-        // Si no existe el repositorio, respondemos con error 404
         if (!$repository) {
-            return response()->json(['message' => 'Repository not found'], 404);
+            return response()->json(['message' => 'Repository not found or unauthorized'], 404);
         }
 
-        // Devolvemos el repositorio encontrado
-        return response()->json($repository, 200);
+        return response()->json($repository);
     }
 
-  
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+
+    public function destroy(Request $request, string $id)
     {
-        // Buscamos el repositorio por ID
-        $repository = Repository::find($id);
+        $repository = Repository::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->first();
 
-        // Si no existe el repositorio, respondemos con error 404
         if (!$repository) {
-            return response()->json(['message' => 'Repository not found'], 404);
+            return response()->json(['message' => 'Repositorio no encontrado o no autorizado.'], 404);
         }
 
-        // Eliminamos el repositorio
         $repository->delete();
 
-        // Respondemos con mensaje de éxito
-        return response()->json(['message' => 'Repository deleted successfully'], 200);
+        return response()->json(['message' => 'Repositorio eliminado'], 200);
     }
 
 
-   
 
-        protected function validateTags(array $tags)
-        {
-            // Obtener todas las tags de MongoDB
-            $existingTags = Tag::pluck('name')->toArray();
+            protected function validateTags(array $tags)
+            {
+                // Obtener todas las tags de MongoDB
+                $existingTags = Tag::pluck('name')->toArray();
 
-            // Verificar si todas las tags enviadas existen en MongoDB
-            foreach ($tags as $tag) {
-                if (!in_array($tag, $existingTags)) {
-                    return false;  // Si alguna tag no existe, devolvemos false
+                // Verificar si todas las tags enviadas existen en MongoDB
+                foreach ($tags as $tag) {
+                    if (!in_array($tag, $existingTags)) {
+                        return false;  // Si alguna tag no existe, devolvemos false
+                    }
                 }
+
+                return true;  // Si todas las tags son válidas, retornamos true
             }
 
-            return true;  // Si todas las tags son válidas, retornamos true
+
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'visibility' => 'required|in:public,private',
+            'shared' => 'boolean',
+            'tags' => 'required|array',
+        ]);
+
+        // Validar las tags
+        if (!$this->validateTags($request->tags)) {
+            return response()->json(['message' => 'Etiqueta o etiquetas incorrectas. Revise la documentación.'], 422);
         }
 
+        // 👇🏻 Aquí asignamos el user_id manualmente
+        $validated['user_id'] = $request->user()->id;
 
-        public function store(Request $request)
-        {
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'visibility' => 'required|in:public,private',
-                'shared' => 'boolean',
-                'tags' => 'required|array',
-            ]);
+        $repository = Repository::create($validated);
 
-            // Validar las tags
-            if (!$this->validateTags($request->tags)) {
-                return response()->json(['message' => 'Some tags are invalid.'], 422);
-            }
+        return response()->json(['message' => 'Repositorio subido correctamente.'], 201);
+    }
 
-            // 👇🏻 Aquí asignamos el user_id manualmente
-            $validated['user_id'] = $request->user()->id;
 
-            $repository = Repository::create($validated);
+    public function update(Request $request, string $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'visibility' => 'required|in:public,private',
+            'shared' => 'boolean',
+            'tags' => 'required|array',
+        ]);
 
-            return response()->json($repository, 201);
+        if (!$this->validateTags($request->tags)) {
+            return response()->json(['message' => 'Etiqueta o etiquetas incorrectas. Revise la documentación.'], 422);
         }
 
+        $repository = Repository::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->first();
 
-
-        public function update(Request $request, string $id)
-        {
-            // Validamos los datos de la petición
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'visibility' => 'required|in:public,private',
-                'shared' => 'boolean',
-                'tags' => 'required|array',
-            ]);
-
-            // Validamos las tags contra la base de datos de MongoDB
-            if (!$this->validateTags($request->tags)) {
-                return response()->json(['message' => 'Some tags are invalid.'], 422);  // 422 Unprocessable Entity
-            }
-
-            // Buscamos el repositorio por ID
-            $repository = Repository::find($id);
-
-            // Si no existe el repositorio, respondemos con error 404
-            if (!$repository) {
-                return response()->json(['message' => 'Repository not found'], 404);
-            }
-
-            // Actualizamos el repositorio si las tags son válidas
-            $repository->update($validated);
-
-            // Devolvemos el repositorio actualizado
-            return response()->json($repository, 200);
+        if (!$repository) {
+            return response()->json(['message' => 'Repositorio no encontrado o no autorizado.'], 404);
         }
 
+        $repository->update($validated);
 
+        return response()->json(['message' => 'Repositorio actualizado correctamente.'], 200);
+    }
 
 }
