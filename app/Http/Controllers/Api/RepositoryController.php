@@ -26,7 +26,7 @@ class RepositoryController extends Controller
             ->first();
 
         if (!$repository) {
-            return response()->json(['message' => 'Repository not found or unauthorized'], 404);
+            return response()->json(['message' => 'Repositorio no encontrado o no autorizado.'], 404);
         }
 
         return response()->json($repository);
@@ -88,7 +88,12 @@ class RepositoryController extends Controller
 
         $repository = Repository::create($validated);
 
-        return response()->json(['message' => 'Repositorio subido correctamente.'], 201);
+        return response()->json([
+            'message' => 'Repositorio subido correctamente.',
+            'ID del repositorio' => $repository->id,
+            'URL para gestionar enlaces' => '/api/repository/' . $repository->id . '/enlaces'
+        ], 201);
+        
     }
 
 

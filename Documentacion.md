@@ -5,11 +5,11 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 
 
 
-## Rutas públicas - Autenticación
+## **Ruta**s públicas - Autenticación
 
 ### Registro de usuario
-- Método ```post```
-- Ruta ```http://localhost:xxxx/api/register```
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/register```
 - **Descripción:** Datos necesarios para registrar usuarios (role → user).
 - **Tokens necesarios:** NO
 - **Body Json:** 
@@ -40,8 +40,8 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 
 ### Login
 
-- Método ```post```
-- Ruta ```http://localhost:xxxx/api/login```
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/login```
 - **Descripción:** Iniciar sesión y obtener token de autenticación.
 - **Tokens necesarios:** NO
 - **Body Json:** 
@@ -59,14 +59,14 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 }
 ```
 
-## Rutas privadas
+## **Ruta**s privadas
 
 ### Repositorios
 
 - [Información de Tags:](#tags)
 
-- Método ```get```
-- Ruta ```http://localhost:xxxx/api/repository```
+- **Método** ```get```
+- **Ruta** ```http://localhost:xxxx/api/repository```
 - **Descripción:** Obtener todos los repositorios del usuario autenticado.
 - **Tokens necesarios:** SI
     - HTTP Headers
@@ -82,8 +82,8 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 }
 ```
 
-- Método ```post```
-- Ruta ```http://localhost:xxxx/api/repository```
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/repository```
 - **Descripción:** Crear repositorios.
 - **Tokens necesarios:** SI
     - HTTP Headers
@@ -120,8 +120,8 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 ```
 
 
-- Método ```put```
-- Ruta ```http://localhost:xxxx/api/repository/id```
+- **Método** ```put```
+- **Ruta** ```http://localhost:xxxx/api/repository/{id}```
 - **Descripción:** Actualizar repositorios.
 - **Tokens necesarios:** SI
     - HTTP Headers
@@ -148,8 +148,8 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 }
 ```
 
-- Método ```delete```
-- Ruta ```http://localhost:xxxx/api/repository/id```
+- **Método** ```delete```
+- **Ruta** ```http://localhost:xxxx/api/repository/{id}```
 - **Descripción:** Eliminar repositorios.
 - **Tokens necesarios:** SI
     - HTTP Headers
@@ -163,12 +163,12 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 }
 ```
 
-### Enlaces ??
+### Enlaces
 
 
-- Método ```get```
-- Ruta ```http://localhost:xxxx/api/enlace```
-- **Descripción:** Obtener todos los repositorios del usuario autenticado.
+- **Método** ```get```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces```
+- **Descripción:** Obtener todos los enlaces del repositorio del usuario autenticado.
 - **Tokens necesarios:** SI
     - HTTP Headers
         - Accept application/json
@@ -178,14 +178,14 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 ```json
 {
     //* Cantidad de repositorios creados.
-    //* Al principio se parte con 0 repositorios
+    //* Al principio se parte con 0 enlaces
   []
 }
 ```
 
-- Método ```post```
-- Ruta ```http://localhost:xxxx/api/repository```
-- **Descripción:** Crear repositorios.
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces```
+- **Descripción:** Crear enlaces en el repositorio.
 - **Tokens necesarios:** SI
     - HTTP Headers
         - Accept application/json
@@ -193,37 +193,37 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 - **Body Json:** 
 ```json
 {
-    "name": "Mi primer repositorio",
-    "description": "Este es un repositorio de prueba",
-    "visibility": "public",
-    "shared": true,
-    "tags": ["Arte"] // Deben crearse tags que están reflejadas en la documentación.
+  "url": "https://www.example.com",
+  "name": "nombre o alias del enlace en cuestión",
+  "visibility": "public",
+  "shared": false
 }
 ```
 
 - Respuesta esperada:
 ```json
-[
-  {
-    "id": 0,
-    "user_id": 0,
-    "name": "Mi primer repositorio",
-    "description": "Este es un repositorio de prueba",
-    "visibility": "public",
-    "shared": true,
-    "tags": [
-      "Arte"
-    ],
-    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
-    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
-  }
-]
+{
+  "message": "Enlace creado correctamente.",
+
+  "id": 10,
+  "repository_id": 10,
+  "url": "https://www.put_exampleusuario31.com",
+  "name": "Enlace a ejemplo usando OooooUT",
+  "visibility": "private",
+  "shared": true,
+  "public_link": "https://example.com/xxxxxxxxx",
+  "private_link": "https://example.com/private/xxxxxxxxxxx",
+  "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+  "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+}
+
+
 ```
 
 
-- Método ```put```
-- Ruta ```http://localhost:xxxx/api/repository/id```
-- **Descripción:** Actualizar repositorios.
+- ****Método**** ```put```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces/{enlace_id}```
+- **Descripción:** Actualizar enlace seleccionado por id.
 - **Tokens necesarios:** SI
     - HTTP Headers
         - Accept application/json
@@ -231,27 +231,23 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 - **Body Json:** 
 ```json
 {
-    
-    "name": "Modificacion de nombre del reposaitorio con ID 7",
-    "description": "Este es un repositorio de prueba",
-    "visibility": "public",
-    "shared": true,
-    "tags": ["Arte"]  // Deben crearse tags que están reflejadas en la documentación.
-
-
+  "url": "https://www.newexample.com",
+  "name": "nuevo nombre o alias del enlace en cuestión",
+  "visibility": "private",
+  "shared": true
 }
 ```
 
 - Respuesta esperada:
 ```json
 {
-  "message": "Repositorio actualizado correctamente."
+  "message": "Enlace actualizado correctamente."
 }
 ```
 
-- Método ```delete```
-- Ruta ```http://localhost:xxxx/api/repository/id```
-- **Descripción:** Eliminar repositorios.
+- ****Método**** ```delete```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces/{enlace_id}```
+- **Descripción:** Eliminar enlace seleccionado.
 - **Tokens necesarios:** SI
     - HTTP Headers
         - Accept application/json
@@ -260,7 +256,7 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 - Respuesta esperada:
 ```json
 {
-  "message": "Repositorio eliminado"
+  "message": "Enlace eliminado"
 }
 ```
 
