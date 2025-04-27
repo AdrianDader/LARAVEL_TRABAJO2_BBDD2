@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Api\RepositoryController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\EnlaceController;
 
 
 // rutas públicas
@@ -16,5 +17,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('repository/{repository}/enlaces', EnlaceController::class);
+});
 
