@@ -62,7 +62,7 @@ class EnlaceController extends Controller
         $enlace->private_link = 'https://example.com/private/' . Str::random(12); 
         $enlace->save();
 
-        return response()->json(['message' => 'Enlace creado correctamente.'], 201);
+        return response()->json(['message' => 'Enlace ' . $enlace->id .' creado correctamente.', 'enlace' => $enlace], 201);
     }
 
      
@@ -94,7 +94,7 @@ class EnlaceController extends Controller
         }
 
         // Si todo está correcto, devolvemos el enlace
-        return response()->json($enlace);
+        return response()->json(['message' => 'enlace encontrado', $enlace]);
     }
 
 
@@ -149,7 +149,7 @@ class EnlaceController extends Controller
         // Guardamos los cambios
         $enlace->save();
 
-        return response()->json(['message' => 'Enlace actualizado correctamente.'], 200);
+        return response()->json(['message' => 'Enlace ' . $enlace->id . ' actualizado correctamente.'], 200);
     }
 
      
@@ -175,18 +175,18 @@ class EnlaceController extends Controller
         $enlace = Enlace::where('repository_id', $repositoryId)->find($enlaceId);
 
         if (!$enlace) {
-            return response()->json(['message' => 'Enlace no encontrado.'], 404);
+            return response()->json(['message' => 'Enlace ' . $enlaceId . ' no encontrado.'], 404);
         }
 
         // Verificamos que el enlace pertenece al repositorio
         if ($enlace->repository_id !== $repository->id) {
-            return response()->json(['message' => 'Este enlace no pertenece a este repositorio.'], 404);
+            return response()->json(['message' => 'Enlace ' . $enlaceId . ' no pertenece a este repositorio.'], 404);
         }
 
         // Eliminamos el enlace
         $enlace->delete();
 
-        return response()->json(['message' => 'Enlace eliminado correctamente.'], 200);
+        return response()->json(['message' => 'Enlace ' . $enlaceId . ' eliminado correctamente.'], 200);
     }
 
 }

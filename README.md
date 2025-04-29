@@ -1,66 +1,290 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Documentación de API - Linktri - Adrián Dader
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Introducción
+Esta API está construida con **Laravel 11** y sigue prácticas modernas de desarrollo, incluyendo autenticación basada en tokens, validación estricta de datos y respuestas estandarizadas en formato JSON.
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## **Ruta**s públicas - Autenticación
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Registro de usuario
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/register```
+- **Descripción:** Datos necesarios para registrar usuarios (role → user).
+- **Tokens necesarios:** NO
+- **Body Json:** 
+```json
+{
+  "name": "Nombre Usuario",
+  "email": "usuario@example.com",
+  "password": "password",
+  "password_confirmation": "password"
+}
+```
+- Respuesta esperada:
+```json
+{
+  "message": "Usuario creado correctamente.",
+  "user": {
+    "name": "Nombre Usuario",
+    "email": "usuario@example.com",
+    "role": "user",
+    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+    "id": 0
+  },
+  "access_token": "0|z2tuHFR...", //* Guardar el token en HTTP Headers para hacer login
+  "token_type": "Bearer"
+}
+```
 
-## Learning Laravel
+### Login
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/login```
+- **Descripción:** Iniciar sesión y obtener token de autenticación.
+- **Tokens necesarios:** NO
+- **Body Json:** 
+```json
+{
+  "email": "usuario@example.com",
+  "password": "password"
+}
+```
+- Respuesta esperada:
+```json
+{
+    //* Guardar el token en HTTP Headers -> clave: Authorization valor: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi...
+  "token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+}
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## **Ruta**s privadas
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Repositorios
 
-## Laravel Sponsors
+- [Información de Tags:](#tags)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Método** ```get```
+- **Ruta** ```http://localhost:xxxx/api/repository```
+- **Descripción:** Obtener todos los repositorios del usuario autenticado.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
 
-### Premium Partners
+- Respuesta esperada:
+```json
+{
+    //* Cantidad de repositorios creados.
+    //* Al principio se parte con 0 repositorios
+  []
+}
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/repository```
+- **Descripción:** Crear repositorios.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
+- **Body Json:** 
+```json
+{
+    "name": "Mi primer repositorio",
+    "description": "Este es un repositorio de prueba",
+    "visibility": "public",
+    "shared": true,
+    "tags": ["Arte"] // Deben crearse tags que están reflejadas en la documentación.
+}
+```
 
-## Contributing
+- Respuesta esperada:
+```json
+[
+  {
+    "id": 0,
+    "user_id": 0,
+    "name": "Mi primer repositorio",
+    "description": "Este es un repositorio de prueba",
+    "visibility": "public",
+    "shared": true,
+    "tags": [
+      "Arte"
+    ],
+    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+  }
+]
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## Code of Conduct
+- **Método** ```put```
+- **Ruta** ```http://localhost:xxxx/api/repository/{id}```
+- **Descripción:** Actualizar repositorios.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
+- **Body Json:** 
+```json
+{
+    
+    "name": "Modificacion de nombre del reposaitorio con ID 7",
+    "description": "Este es un repositorio de prueba",
+    "visibility": "public",
+    "shared": true,
+    "tags": ["Arte"]  // Deben crearse tags que están reflejadas en la documentación.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Respuesta esperada:
+```json
+{
+  "message": "Repositorio actualizado correctamente."
+}
+```
 
-## License
+- **Método** ```delete```
+- **Ruta** ```http://localhost:xxxx/api/repository/{id}```
+- **Descripción:** Eliminar repositorios.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Respuesta esperada:
+```json
+{
+  "message": "Repositorio eliminado"
+}
+```
+
+### Enlaces
+
+
+- **Método** ```get```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces```
+- **Descripción:** Obtener todos los enlaces del repositorio del usuario autenticado.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
+
+- Respuesta esperada:
+```json
+{
+    //* Cantidad de repositorios creados.
+    //* Al principio se parte con 0 enlaces
+  []
+}
+```
+
+- **Método** ```post```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces```
+- **Descripción:** Crear enlaces en el repositorio.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
+- **Body Json:** 
+```json
+{
+  "url": "https://www.example.com",
+  "name": "nombre o alias del enlace en cuestión",
+  "visibility": "public",
+  "shared": false
+}
+```
+
+- Respuesta esperada:
+```json
+{
+  "message": "Enlace creado correctamente.",
+
+  "id": 10,
+  "repository_id": 10,
+  "url": "https://www.put_exampleusuario31.com",
+  "name": "Enlace a ejemplo usando OooooUT",
+  "visibility": "private",
+  "shared": true,
+  "public_link": "https://example.com/xxxxxxxxx",
+  "private_link": "https://example.com/private/xxxxxxxxxxx",
+  "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+  "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
+}
+
+
+```
+
+
+- ****Método**** ```put```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces/{enlace_id}```
+- **Descripción:** Actualizar enlace seleccionado por id.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
+- **Body Json:** 
+```json
+{
+  "url": "https://www.newexample.com",
+  "name": "nuevo nombre o alias del enlace en cuestión",
+  "visibility": "private",
+  "shared": true
+}
+```
+
+- Respuesta esperada:
+```json
+{
+  "message": "Enlace actualizado correctamente."
+}
+```
+
+- ****Método**** ```delete```
+- **Ruta** ```http://localhost:xxxx/api/{repository_id}/enlaces/{enlace_id}```
+- **Descripción:** Eliminar enlace seleccionado.
+- **Tokens necesarios:** SI
+    - HTTP Headers
+        - Accept application/json
+        - Authorization Bearer [tu token...]
+
+- Respuesta esperada:
+```json
+{
+  "message": "Enlace eliminado"
+}
+```
+
+<a name="tags"></a>
+### Listado de tags 
+
+```json
+[
+  "Matemáticas", "Física", "Química", "Biología", "Geografía",
+  "Historia", "Lengua", "Literatura", "Arte", "Música",
+  "Tecnología", "Informática", "Robótica", "Inteligencia Artificial", "Programación",
+  "Economía", "Filosofía", "Sociología", "Psicología", "Antropología",
+  "Derecho", "Política", "Ecología", "Astronomía", "Medicina",
+  "Ingeniería", "Estadística", "Contabilidad", "Marketing", "Ciencias Ambientales",
+  
+  "Recetas", "Cocina", "Gastronomía", "Dieta", "Alimentación saludable",
+  "Postres", "Comida rápida", "Comida vegana", "Cocina fácil", "Comida tradicional",
+  
+  "Cine", "Televisión", "Videojuegos", "Música en vivo", "Teatro",
+  "Series", "Libros", "Comedia", "Arte contemporáneo", "Danza",
+  
+  "Fútbol", "Baloncesto", "Tenis", "Atletismo", "Natación",
+  "Ciclismo", "Fórmula 1", "Deportes extremos", "Gimnasia", "Boxeo",
+  
+  "Salud", "Ejercicio físico", "Mindfulness", "Meditación", "Yoga",
+  "Fitness", "Motivación", "Bienestar emocional", "Cuidado personal", "Autoayuda",
+  
+  "Viajes", "Fotografía", "Tecnología móvil", "Redes sociales", "Educación",
+  "Emprendimiento", "Negocios", "Finanzas", "Trabajo remoto", "Automóviles"
+]
+```
