@@ -39,7 +39,7 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
     "email": "example@example.com",
     "password": "1234"
   },
-  "access_token": "32|KtEBMr9SrvC...", //* Guardar tiken en HTTP Headers para hacer login
+  "access_token": "32|KtEBMr9SrvC...", //* Guardar token en HTTP Headers para hacer login
   "token_type": "Bearer"
 }
 ```
@@ -73,7 +73,7 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
       "..."
     ]
   },
-  "access_token": "29|ULOBahNGRaL...", //* Guardar tiken en HTTP Headers para hacer login
+  "access_token": "29|ULOBahNGRaL...", //* Guardar token en HTTP Headers para hacer login
   "token_type": "Bearer"
 }
 ```
