@@ -27,14 +27,19 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 {
   "message": "Usuario creado correctamente.",
   "user": {
-    "name": "Nombre Usuario",
-    "email": "usuario@example.com",
+    "name": "UserName",
+    "email": "example@example.com",
     "role": "user",
-    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
-    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhhh",
-    "id": 0
+    "updated_at": "yyyy-mm-ddThh:hh:hh.hhhhhh",
+    "created_at": "yyyy-mm-ddThh:hh:hh.hhhhhh",
+    "id": 20
   },
-  "access_token": "0|z2tuHFR...", //* Guardar el token en HTTP Headers para hacer login
+  "api_access_login": "http://localhost:xxxx/api/login",
+  "payload_example_login": {
+    "email": "example@example.com",
+    "password": "1234"
+  },
+  "access_token": "32|KtEBMr9SrvC...", //* Guardar tiken en HTTP Headers para hacer login
   "token_type": "Bearer"
 }
 ```
@@ -68,7 +73,7 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
       "..."
     ]
   },
-  "access_token": "29|ULOBahNGRaL...",
+  "access_token": "29|ULOBahNGRaL...", //* Guardar tiken en HTTP Headers para hacer login
   "token_type": "Bearer"
 }
 ```
