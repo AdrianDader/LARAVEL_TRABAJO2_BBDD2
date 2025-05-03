@@ -22,7 +22,7 @@ class RepositorySeeder extends Seeder
             'description' => 'Descripción del repositorio único',
             'visibility' => 'public',
             'shared' => true,
-            'tags' => [$tag->name], // 👈 Guardamos el ObjectId como array JSON
+            'tags' => [$tag->name],
         ]);
     }
 }

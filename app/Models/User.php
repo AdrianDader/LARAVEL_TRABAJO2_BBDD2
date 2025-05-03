@@ -17,7 +17,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $connection = 'mysql'; // 👈 esto fuerza que use MySQL
+    protected $connection = 'mysql'; 
 
     protected $fillable = [
         'name',

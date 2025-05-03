@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('adminpassword'),
                 'role' => 'admin',
                 'email_verified_at' => now(),
-                'remember_token' => Str::random(10), // 👈 Ya funciona correctamente
+                'remember_token' => Str::random(10), 
             ]);
         }
 

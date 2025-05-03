@@ -3,7 +3,8 @@
 ## Introducción
 Esta API está construida con **Laravel 11** y sigue prácticas modernas de desarrollo, incluyendo autenticación basada en tokens, validación estricta de datos y respuestas estandarizadas en formato JSON.
 
-
+## Diagrama ER
+![image](./Diegarama.jpeg)
 
 ## **Ruta**s públicas - Autenticación
 
@@ -54,8 +55,21 @@ Esta API está construida con **Laravel 11** y sigue prácticas modernas de desa
 - Respuesta esperada:
 ```json
 {
-    //* Guardar el token en HTTP Headers -> clave: Authorization valor: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi...
-  "token": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOi..."
+  "message": "Usuario UserName logeado correctamente.",
+  "api_access": "http://localhost:xxxx/api/repository",
+  "payload_example": {
+    "name": "",
+    "description": "",
+    "visibility": "private | public",
+    "shared": "true | false",
+    "tags": [
+      "Tag1",
+      "Tag2",
+      "..."
+    ]
+  },
+  "access_token": "29|ULOBahNGRaL...",
+  "token_type": "Bearer"
 }
 ```
 

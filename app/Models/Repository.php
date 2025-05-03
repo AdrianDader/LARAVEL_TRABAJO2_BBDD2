@@ -9,7 +9,7 @@ class Repository extends Model
 {
     use HasFactory;
     
-    protected $connection = 'mysql'; // 👈 esto fuerza que use MySQL
+    protected $connection = 'mysql'; 
 
     protected $fillable = [
         'user_id',

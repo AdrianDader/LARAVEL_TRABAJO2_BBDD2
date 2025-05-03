@@ -28,9 +28,19 @@ class AuthController extends Controller
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
+            'message' => "Usuario {$user->name} logeado correctamente.",
+            'api_access' => url('/api/repository'),
+            'payload_example_newRepository' => [
+                'name' => '',
+                'description' => '',
+                'visibility' => 'private | public',
+                'shared' => 'true | false', 
+                'tags' => ['Tag1', 'Tag2', '...']
+            ],
             'access_token' => $token,
             'token_type' => 'Bearer',
         ]);
+        
     }
 
 
@@ -47,17 +57,21 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']), // Hasheamos la password
-            'role' => 'user', // 👈 Siempre creamos como 'user'
+            'password' => Hash::make($validated['password']), 
+            'role' => 'user', // valor user por defecto
         ]);
 
-        // (Opcional) Crear un token para autenticar después
         $token = $user->createToken('auth_token')->plainTextToken;
 
         // Devolver respuesta
         return response()->json([
             'message' => 'Usuario creado correctamente.',
             'user' => $user,
+            'api_access_login' => url('/api/login'),
+            'payload_example_login' => [
+                'email' => 'example@example.com',
+                'password' => '1234',
+            ],
             'access_token' => $token,
             'token_type' => 'Bearer',
         ], 201);

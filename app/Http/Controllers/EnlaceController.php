@@ -24,8 +24,6 @@ class EnlaceController extends Controller
         if (!$repository) {
             return response()->json(['message' => 'Repositorio no encontrado o no autorizado.'], 404);
         }
-
-        // Obtenemos los enlaces que pertenecen al repositorio
         $enlaces = Enlace::where('repository_id', $repositoryId)->get();
 
         // Devolvemos los enlaces encontrados
@@ -57,8 +55,8 @@ class EnlaceController extends Controller
 
         // Creamos el enlace con el repository_id
         $enlace = new Enlace($validated);
-        $enlace->repository_id = $repository->id; // Asignamos el repository_id
-        $enlace->public_link = 'https://example.com/' . Str::random(10); // Generamos los links
+        $enlace->repository_id = $repository->id; 
+        $enlace->public_link = 'https://example.com/' . Str::random(10);
         $enlace->private_link = 'https://example.com/private/' . Str::random(12); 
         $enlace->save();
 
@@ -86,7 +84,7 @@ class EnlaceController extends Controller
             return response()->json(['message' => 'No tienes permiso para ver este repositorio.'], 403);
         }
 
-        // Buscamos el enlace explícitamente por ID
+        // Buscamos el enlace por ID
         $enlace = Enlace::where('repository_id', $repositoryId)->find($enlaceId);
 
         if (!$enlace) {
@@ -94,7 +92,7 @@ class EnlaceController extends Controller
         }
 
         // Si todo está correcto, devolvemos el enlace
-        return response()->json(['message' => 'enlace encontrado', $enlace]);
+        return response()->json(['message' => 'enlace encontrado', $enlace], 200);
     }
 
 
@@ -131,7 +129,7 @@ class EnlaceController extends Controller
             return response()->json(['message' => 'Este enlace no pertenece a este repositorio.'], 404);
         }
 
-        // Validamos los datos de la solicitud
+        // Validamos los datos
         $validated = $request->validate([
             'url' => 'required|url',
             'name' => 'required|string|max:255',
@@ -146,7 +144,6 @@ class EnlaceController extends Controller
         $enlace->public_link = 'https://example.com/' . Str::random(10);
         $enlace->private_link = 'https://example.com/private/' . Str::random(12);
 
-        // Guardamos los cambios
         $enlace->save();
 
         return response()->json(['message' => 'Enlace ' . $enlace->id . ' actualizado correctamente.'], 200);
@@ -171,7 +168,7 @@ class EnlaceController extends Controller
             return response()->json(['message' => 'No tienes permiso para eliminar este repositorio.'], 403);
         }
 
-        // Buscamos el enlace explícitamente por ID
+        // Buscamos el enlace por ID
         $enlace = Enlace::where('repository_id', $repositoryId)->find($enlaceId);
 
         if (!$enlace) {
