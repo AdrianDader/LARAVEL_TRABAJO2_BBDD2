@@ -4,7 +4,7 @@
 Esta API está construida con **Laravel 11** y sigue prácticas modernas de desarrollo, incluyendo autenticación basada en tokens, validación estricta de datos y respuestas estandarizadas en formato JSON.
 
 ## Configuración del entorno Laravel 11
-```json
+```bash
 composer install
 
 // requiere generar un .env y una key:
