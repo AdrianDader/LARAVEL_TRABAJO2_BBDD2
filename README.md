@@ -3,6 +3,20 @@
 ## Introducción
 Esta API está construida con **Laravel 11** y sigue prácticas modernas de desarrollo, incluyendo autenticación basada en tokens, validación estricta de datos y respuestas estandarizadas en formato JSON.
 
+## Configuración del entorno Laravel 11
+```json
+composer install
+
+// requiere generar un .env y una key:
+cp .env.example .env
+php artisan key:generate
+
+composer require laravel/sanctum
+
+
+//levantar servidor
+php artisan serve
+```
 ## Diagrama ER
 ![image](./Diegarama.jpeg)
 
